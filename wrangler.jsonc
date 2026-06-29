@@ -3,6 +3,6 @@
   "name": "liquid-glass-canvas",
   "compatibility_date": "2026-06-29",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist-demo"
   }
 }

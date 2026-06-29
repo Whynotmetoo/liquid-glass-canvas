@@ -2,13 +2,37 @@
   "name": "liquid-glass-canvas",
   "version": "0.1.0",
   "description": "High-performance WebGL-native liquid glass refraction effects for HTML5 Canvas and WebGL sources.",
-  "main": "index.js",
+  "main": "./dist/liquid-glass-canvas.umd.js",
+  "module": "./dist/liquid-glass-canvas.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/liquid-glass-canvas.mjs",
+      "require": "./dist/liquid-glass-canvas.umd.js"
+    },
+    "./css": "./dist/liquid-glass-canvas.css"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
+    "dev": "vite -c vite.config.demo.ts",
+    "build": "npm run build:lib && npm run build:demo",
+    "build:lib": "vite build -c vite.config.ts",
+    "build:demo": "vite build -c vite.config.demo.ts",
+    "preview": "vite preview -c vite.config.demo.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "npm run build && wrangler deploy"
+    "prepack": "npm run build:lib",
+    "deploy": "npm run build:demo && wrangler deploy"
+  },
+  "homepage": "https://liquid-glass-canvas.carsonye.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Whynotmetoo/liquid-glass-canvas.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Whynotmetoo/liquid-glass-canvas/issues"
   },
   "keywords": [
     "webgl",
@@ -23,9 +47,11 @@
   "license": "MIT",
   "type": "commonjs",
   "devDependencies": {
+    "@microsoft/api-extractor": "^7.58.9",
     "@types/three": "^0.184.1",
     "typescript": "^6.0.3",
     "vite": "^8.1.0",
+    "vite-plugin-dts": "^5.0.3",
     "wrangler": "^3.109.0"
   },
   "dependencies": {
