@@ -1,11 +1,29 @@
 import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts';
+import { resolve } from 'path';
 
 export default defineConfig({
-  server: {
-    port: 3000,
-    open: true
-  },
+  plugins: [
+    dts({
+      tsconfigPath: './tsconfig.json',
+      rollupTypes: true
+    })
+  ],
   build: {
-    target: 'esnext'
+    outDir: 'dist',
+    lib: {
+      entry: resolve(__dirname, 'src/index.ts'),
+      name: 'LiquidGlassCanvas',
+      fileName: (format) => `liquid-glass-canvas.${format === 'es' ? 'js' : 'umd.js'}`,
+      formats: ['es', 'umd']
+    },
+    rollupOptions: {
+      external: ['three'],
+      output: {
+        globals: {
+          three: 'THREE'
+        }
+      }
+    }
   }
 });
