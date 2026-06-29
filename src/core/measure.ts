@@ -17,8 +17,13 @@ export function measureElement(element: HTMLElement, container: HTMLElement): Re
   };
 }
 
+const colorCache = new Map<string, [number, number, number, number]>();
+
 export function parseColor(color: string | [number, number, number, number]): [number, number, number, number] {
   if (Array.isArray(color)) return color;
+  
+  const cached = colorCache.get(color);
+  if (cached) return cached;
   
   const div = document.createElement('div');
   div.style.color = color;
@@ -29,12 +34,17 @@ export function parseColor(color: string | [number, number, number, number]): [n
   
   const match = rgb.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+)\s*)?\)/);
   if (match) {
-    return [
+    const result: [number, number, number, number] = [
       parseInt(match[1], 10) / 255,
       parseInt(match[2], 10) / 255,
       parseInt(match[3], 10) / 255,
       match[4] !== undefined ? parseFloat(match[4]) : 1.0
     ];
+    colorCache.set(color, result);
+    return result;
   }
-  return [1, 1, 1, 1];
+  
+  const fallback: [number, number, number, number] = [1, 1, 1, 1];
+  colorCache.set(color, fallback);
+  return fallback;
 }
