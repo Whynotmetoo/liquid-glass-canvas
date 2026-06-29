@@ -15,7 +15,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'LiquidGlassCanvas',
-      fileName: (format) => `liquid-glass-canvas.${format === 'es' ? 'js' : 'umd.js'}`,
+      fileName: (format) => `liquid-glass-canvas.${format === 'es' ? 'mjs' : 'umd.js'}`,
       formats: ['es', 'umd']
     },
     rollupOptions: {

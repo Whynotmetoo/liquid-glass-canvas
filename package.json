@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "description": "High-performance WebGL-native liquid glass refraction effects for HTML5 Canvas and WebGL sources.",
   "main": "./dist/liquid-glass-canvas.umd.js",
-  "module": "./dist/liquid-glass-canvas.js",
+  "module": "./dist/liquid-glass-canvas.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/liquid-glass-canvas.js",
-      "require": "./dist/liquid-glass-canvas.umd.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/liquid-glass-canvas.mjs",
+      "require": "./dist/liquid-glass-canvas.umd.js"
     },
     "./css": "./dist/liquid-glass-canvas.css"
   },
