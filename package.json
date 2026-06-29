@@ -4,12 +4,12 @@
   "description": "High-performance WebGL-native liquid glass refraction effects for HTML5 Canvas and WebGL sources.",
   "main": "./dist/liquid-glass-canvas.umd.js",
   "module": "./dist/liquid-glass-canvas.js",
-  "types": "./dist/src/index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/liquid-glass-canvas.js",
       "require": "./dist/liquid-glass-canvas.umd.js",
-      "types": "./dist/src/index.d.ts"
+      "types": "./dist/index.d.ts"
     },
     "./css": "./dist/liquid-glass-canvas.css"
   },
@@ -23,6 +23,7 @@
     "build:demo": "vite build -c vite.config.demo.ts",
     "preview": "vite preview -c vite.config.demo.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "prepack": "npm run build:lib",
     "deploy": "npm run build:demo && wrangler deploy"
   },
   "homepage": "https://liquid-glass-canvas.carsonye.com",
@@ -46,6 +47,7 @@
   "license": "MIT",
   "type": "commonjs",
   "devDependencies": {
+    "@microsoft/api-extractor": "^7.58.9",
     "@types/three": "^0.184.1",
     "typescript": "^6.0.3",
     "vite": "^8.1.0",
