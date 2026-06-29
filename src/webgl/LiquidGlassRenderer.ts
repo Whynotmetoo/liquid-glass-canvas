@@ -14,6 +14,7 @@ export class LiquidGlassRenderer {
   private source: HTMLCanvasElement;
   private container: HTMLElement;
   private dpr: number | 'auto';
+  private quality: 'auto' | 'high' | 'low';
 
   private rafId: number = 0;
   private isRunning: boolean = false;
@@ -22,6 +23,7 @@ export class LiquidGlassRenderer {
     this.source = options.source;
     this.container = options.container;
     this.dpr = options.dpr || 'auto';
+    this.quality = options.quality || 'auto';
 
     this.overlay = document.createElement('canvas');
     this.overlay.className = 'liquid-glass-overlay';
@@ -49,9 +51,24 @@ export class LiquidGlassRenderer {
     this.resize();
   }
 
+  private getActiveQuality(): 'high' | 'low' {
+    let q = this.quality;
+    if (q === 'auto') {
+      const isMobile = typeof navigator !== 'undefined' && /Mobi|Android|iPhone/i.test(navigator.userAgent);
+      q = isMobile ? 'low' : 'high';
+    }
+    return q;
+  }
+
   private resize() {
     const rect = this.container.getBoundingClientRect();
-    const dpr = this.dpr === 'auto' ? window.devicePixelRatio || 1 : (this.dpr as number);
+    const activeQuality = this.getActiveQuality();
+    let dpr = this.dpr === 'auto' ? window.devicePixelRatio || 1 : (this.dpr as number);
+    if (activeQuality === 'low') {
+      dpr = Math.min(dpr, 1);
+    } else {
+      dpr = Math.min(dpr, 2);
+    }
     
     this.overlay.width = rect.width * dpr;
     this.overlay.height = rect.height * dpr;
@@ -93,16 +110,27 @@ export class LiquidGlassRenderer {
   }
 
   tick() {
-    const lenses = this.registry.getActiveLenses(this.container);
+    let lenses = this.registry.getActiveLenses(this.container);
     if (lenses.length === 0) {
       this.gl.clearColor(0, 0, 0, 0);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
       return;
     }
 
+    const activeQuality = this.getActiveQuality();
+    const maxLenses = activeQuality === 'low' ? 4 : 16;
+    if (lenses.length > maxLenses) {
+      lenses = lenses.slice(0, maxLenses);
+    }
+
     this.textureSource.update(this.source);
 
-    const dpr = this.dpr === 'auto' ? window.devicePixelRatio || 1 : (this.dpr as number);
+    let dpr = this.dpr === 'auto' ? window.devicePixelRatio || 1 : (this.dpr as number);
+    if (activeQuality === 'low') {
+      dpr = Math.min(dpr, 1);
+    } else {
+      dpr = Math.min(dpr, 2);
+    }
 
     const scaledLenses = lenses.map(l => ({
       ...l,
@@ -113,6 +141,7 @@ export class LiquidGlassRenderer {
       radius: l.radius * dpr,
       feather: l.feather * dpr,
       depth: l.depth * dpr,
+      chroma: activeQuality === 'low' ? 0 : l.chroma,
     }));
 
     this.gl.clearColor(0, 0, 0, 0);
