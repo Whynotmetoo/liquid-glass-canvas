@@ -25,6 +25,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "npm run build:demo && wrangler deploy"
   },
+  "homepage": "https://liquid-glass-canvas.carsonye.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Whynotmetoo/liquid-glass-canvas.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Whynotmetoo/liquid-glass-canvas/issues"
+  },
   "keywords": [
     "webgl",
     "canvas",
